@@ -2,7 +2,7 @@ import { RootState } from './store';
 
 export function loadState() {
   try {
-    const serialized = window.localStorage.getItemg('state');
+    const serialized = window.localStorage.getItem('state');
     if (serialized === null) {
       return undefined;
     }
