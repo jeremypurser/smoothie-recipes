@@ -3,7 +3,6 @@ import { useForm } from 'react-hook-form';
 import { useHistory, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { addRecipe, AmountUnit, updateRecipe } from '../../data/recipesSlice';
-import './style.css';
 import { transformRecipeData } from './utility';
 
 export type CreateSmoothie = {
