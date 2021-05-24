@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import styles from './Header.module.css';
 
 export function Header() {
@@ -8,10 +8,22 @@ export function Header() {
       <nav>
         <ul>
           <li>
-            <Link to="/recipe">New Recipe</Link>
+            <NavLink
+              activeClassName={styles.active}
+              className={styles.link}
+              to="/recipe"
+            >
+              New Recipe
+            </NavLink>
           </li>
           <li>
-            <Link to="/recipes">Recipes</Link>
+            <NavLink
+              activeClassName={styles.active}
+              className={styles.link}
+              to="/recipes"
+            >
+              Recipes
+            </NavLink>
           </li>
         </ul>
       </nav>

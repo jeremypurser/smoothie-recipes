@@ -1,10 +1,12 @@
 .container {
+  color: blue;
   width: 100%;
-  background-color: rgb(0, 247, 255);
+  background-color: rgb(218, 218, 218);
   padding: 0.8rem;
   display: flex;
   justify-content: space-between;
   margin-bottom: 2rem;
+  border-bottom: 2px solid blue;
 }
 
 .container h1 {
@@ -19,4 +21,13 @@
 .container li {
   margin-right: 2.5rem;
   list-style: none;
+}
+
+.link {
+  color: blue;
+  text-decoration: none;
+}
+
+.active {
+  border-bottom: 2px solid blue;
 }
