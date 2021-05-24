@@ -5,7 +5,6 @@
   padding: 0.8rem;
   display: flex;
   justify-content: space-between;
-  margin-bottom: 2rem;
   border-bottom: 2px solid blue;
 }
 
@@ -21,13 +20,4 @@
 .container li {
   margin-right: 2.5rem;
   list-style: none;
-}
-
-.link {
-  color: blue;
-  text-decoration: none;
-}
-
-.active {
-  border-bottom: 2px solid blue;
 }
