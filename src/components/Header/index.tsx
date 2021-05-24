@@ -7,9 +7,11 @@ export function Header() {
       <nav>
         <ul>
           <li>
-            <Link to="recipe">New Recipe</Link>
+            <Link to="/recipe">New Recipe</Link>
           </li>
-          <li>All Recipes</li>
+          <li>
+            <Link to="/recipes">Recipes</Link>
+          </li>
         </ul>
       </nav>
     </>
