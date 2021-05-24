@@ -9,15 +9,17 @@ function App() {
     <Router>
       <Header />
       <Switch>
-        <Route exact path="/recipe">
-          <SmoothieForm />
-        </Route>
-        <Route path="/recipe/:id">
-          <SmoothieForm />
-        </Route>
-        <Route path="/recipes">
-          <Smoothies />
-        </Route>
+        <div className="container">
+          <Route exact path="/recipe">
+            <SmoothieForm />
+          </Route>
+          <Route path="/recipe/:id">
+            <SmoothieForm />
+          </Route>
+          <Route path="/recipes">
+            <Smoothies />
+          </Route>
+        </div>
       </Switch>
     </Router>
   );
