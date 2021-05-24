@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-export type AmountUnit = 'cup' | 'Tbsp' | 'tsp' | 'oz';
+export type AmountUnit = 'cup' | 'Tbsp' | 'tsp' | 'oz' | '';
 
 export type Ingredient = {
   name: string;
@@ -16,17 +16,34 @@ export type Recipe = {
   ingredients: Ingredient[];
 };
 
-const initialState: Recipe[] = [];
+type RecipeState = {
+  byId: Record<string, Recipe>;
+  allIds: string[];
+};
+
+const initialState: RecipeState = {
+  byId: {},
+  allIds: [],
+};
 
 const recipesSlice = createSlice({
   name: 'recipes',
   initialState,
   reducers: {
     addRecipe: (state, action: PayloadAction<Recipe>) => {
-      state.push(action.payload);
+      state.byId[action.payload.id] = action.payload;
+      state.allIds.push(action.payload.id);
+    },
+    updateRecipe: (state, action: PayloadAction<Recipe>) => {
+      state.byId[action.payload.id] = action.payload;
+    },
+    // payload is recipe.id
+    deleteRecipe: (state, action: PayloadAction<string>) => {
+      delete state.byId[action.payload];
+      state.allIds.filter((id) => id !== action.payload);
     },
   },
 });
 
-export const { addRecipe } = recipesSlice.actions;
+export const { addRecipe, updateRecipe, deleteRecipe } = recipesSlice.actions;
 export const recipesReducer = recipesSlice.reducer;
