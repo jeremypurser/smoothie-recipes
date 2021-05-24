@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
+import styles from './Header.module.css';
 
 export function Header() {
   return (
-    <>
+    <div className={styles.container}>
       <h1>Smoothie Recipes</h1>
       <nav>
         <ul>
@@ -14,6 +15,6 @@ export function Header() {
           </li>
         </ul>
       </nav>
-    </>
+    </div>
   );
 }
