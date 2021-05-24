@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useHistory, useParams } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { addRecipe, AmountUnit, updateRecipe } from '../../data/recipesSlice';
 import './style.css';
+import { transformRecipeData } from './utility';
 
-type AmountUnit = 'cup' | 'Tbsp' | 'tsp' | 'oz';
-
-type CreateSmoothie = {
+export type CreateSmoothie = {
   name: string;
   ingredients: string[];
   amountValues: number[];
@@ -12,10 +14,44 @@ type CreateSmoothie = {
 };
 
 export function SmoothieForm() {
-  const { register, unregister, handleSubmit } = useForm<CreateSmoothie>();
-  const [ingredients, setIngredients] = useState([0, 1, 2]);
+  const dispatch = useAppDispatch();
+  const recipes = useAppSelector((state) => state.recipes);
+  const history = useHistory();
+  const { id } = useParams<{ id: string }>();
+  const recipeToUpdate = recipes.byId[id];
 
   const options: AmountUnit[] = ['cup', 'Tbsp', 'tsp', 'oz'];
+
+  const getDefaultValues = (): CreateSmoothie => {
+    if (recipeToUpdate) {
+      return {
+        name: recipeToUpdate.name,
+        ingredients: recipeToUpdate.ingredients.map(
+          (ingredient) => ingredient.name
+        ),
+        amountValues: recipeToUpdate.ingredients.map(
+          (ingredient) => ingredient.amount.value
+        ),
+        amountUnits: recipeToUpdate.ingredients.map(
+          (ingredient) => ingredient.amount.unit
+        ),
+      };
+    }
+    return {
+      name: '',
+      ingredients: [''],
+      amountValues: [0],
+      amountUnits: [''],
+    };
+  };
+
+  const { register, unregister, handleSubmit } = useForm<CreateSmoothie>({
+    defaultValues: getDefaultValues(),
+  });
+
+  const [ingredients, setIngredients] = useState(
+    getDefaultValues().ingredients.map((_, i) => i)
+  );
 
   const handleAddIngredient = () => {
     setIngredients([...ingredients, ingredients[ingredients.length - 1] + 1]);
@@ -28,8 +64,14 @@ export function SmoothieForm() {
     setIngredients(ingredients.slice(0, i).concat(ingredients.slice(i + 1)));
   };
 
+  const submitRecipe = (data: CreateSmoothie) => {
+    const recipe = transformRecipeData({ recipe: data, id });
+    dispatch(recipeToUpdate ? updateRecipe(recipe) : addRecipe(recipe));
+    history.push('/recipes');
+  };
+
   return (
-    <form onSubmit={handleSubmit((data) => console.log(data))}>
+    <form onSubmit={handleSubmit(submitRecipe)}>
       <div>
         <label htmlFor="name">Name:</label>
         <input id="name" {...register('name')} />
@@ -50,7 +92,9 @@ export function SmoothieForm() {
               {...register(`amountValues.${i}` as `amountValues.${number}`, {
                 required: true,
                 valueAsNumber: true,
+                validate: (val) => Number(val) > 0,
               })}
+              type="number"
             />
             <label htmlFor={`amountUnits.${i}`}>Unit:</label>
             <select
@@ -67,15 +111,16 @@ export function SmoothieForm() {
               ))}
             </select>
             {i > 0 && (
-              <button onClick={handleRemoveIngredient.bind(null, i)}>
-                Remove
-              </button>
+              <button onClick={() => handleRemoveIngredient(i)}>Remove</button>
             )}
           </div>
         ))}
         <button onClick={handleAddIngredient}>Add ingredient</button>
       </div>
-      <input type="submit" />
+      <input
+        type="submit"
+        value={recipeToUpdate ? 'Update recipe' : 'Add recipe'}
+      />
     </form>
   );
 }
