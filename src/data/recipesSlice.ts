@@ -33,14 +33,17 @@ const recipesSlice = createSlice({
     addRecipe: (state, action: PayloadAction<Recipe>) => {
       state.byId[action.payload.id] = action.payload;
       state.allIds.push(action.payload.id);
+      return state;
     },
     updateRecipe: (state, action: PayloadAction<Recipe>) => {
       state.byId[action.payload.id] = action.payload;
+      return state;
     },
     // payload is recipe.id
     deleteRecipe: (state, action: PayloadAction<string>) => {
       delete state.byId[action.payload];
-      state.allIds.filter((id) => id !== action.payload);
+      state.allIds = state.allIds.filter((id) => id !== action.payload);
+      return state;
     },
   },
 });
