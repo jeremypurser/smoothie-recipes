@@ -73,8 +73,9 @@ export function SmoothieForm() {
     const recipe = transformRecipeData({ recipe: data, id });
 
     if (
+      !recipeToUpdate &&
       Object.values(recipes.byId).find((r) => r.name === recipe.name) !==
-      undefined
+        undefined
     ) {
       setError('name', { message: 'Name already exists' });
       return;
