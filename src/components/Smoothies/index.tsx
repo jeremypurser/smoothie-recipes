@@ -8,7 +8,7 @@ export function Smoothies() {
   return recipes.allIds.length > 0 ? (
     <>
       {recipes.allIds.map((id) => (
-        <Smoothie recipe={recipes.byId[id]} />
+        <Smoothie key={id} recipe={recipes.byId[id]} />
       ))}
     </>
   ) : (
