@@ -1,3 +1,7 @@
+h2 {
+  margin: 0 0 1rem;
+}
+
 input[type='submit'],
 button {
   cursor: pointer;
@@ -18,4 +22,34 @@ form div {
 
 .active {
   border-bottom: 2px solid blue;
+}
+
+label,
+input,
+select {
+  margin-right: 0.5rem;
+}
+
+input:focus {
+  outline: none;
+  border-color: blue;
+  box-shadow: 0 0 0.2rem #555;
+}
+
+input[type='number'] {
+  width: 3rem;
+}
+
+button,
+input[type='submit'] {
+  color: blue;
+  background: rgb(151, 151, 255);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.1;
+}
+
+.error {
+  font-size: 0.75rem;
+  color: red;
 }
