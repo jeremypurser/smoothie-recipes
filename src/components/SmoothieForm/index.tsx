@@ -44,7 +44,12 @@ export function SmoothieForm() {
     };
   };
 
-  const { register, unregister, handleSubmit } = useForm<CreateSmoothie>({
+  const {
+    register,
+    unregister,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<CreateSmoothie>({
     defaultValues: getDefaultValues(),
   });
 
@@ -60,66 +65,80 @@ export function SmoothieForm() {
     unregister(`ingredients.${i}` as `ingredients.${number}`);
     unregister(`amountValues.${i}` as `amountValues.${number}`);
     unregister(`amountUnits.${i}` as `amountUnits.${number}`);
-    setIngredients(ingredients.slice(0, i).concat(ingredients.slice(i + 1)));
+    setIngredients(ingredients.filter((ingredient) => ingredient !== i));
   };
 
   const submitRecipe = (data: CreateSmoothie) => {
+    console.log(errors);
     const recipe = transformRecipeData({ recipe: data, id });
     dispatch(recipeToUpdate ? updateRecipe(recipe) : addRecipe(recipe));
     history.push('/recipes');
   };
 
   return (
-    <form onSubmit={handleSubmit(submitRecipe)}>
-      <div>
-        <label htmlFor="name">Name:</label>
-        <input id="name" {...register('name')} />
-      </div>
-      <div>
-        {ingredients.map((i) => (
-          <div key={i}>
-            <label htmlFor={`ingredients.${i}`}>Ingredient:</label>
-            <input
-              id={`ingredients.${i}`}
-              {...register(`ingredients.${i}` as `ingredients.${number}`, {
-                required: true,
-              })}
-            />
-            <label htmlFor={`amountValues.${i}`}>Amount:</label>
-            <input
-              id={`amountValues.${i}`}
-              {...register(`amountValues.${i}` as `amountValues.${number}`, {
-                required: true,
-                valueAsNumber: true,
-                validate: (val) => Number(val) > 0,
-              })}
-              type="number"
-            />
-            <label htmlFor={`amountUnits.${i}`}>Unit:</label>
-            <select
-              id={`amountUnits.${i}`}
-              {...register(`amountUnits.${i}` as `amountUnits.${number}`, {
-                required: true,
-              })}
-            >
-              <option value="">Select...</option>
-              {options.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-            {i > 0 && (
-              <button onClick={() => handleRemoveIngredient(i)}>Remove</button>
-            )}
-          </div>
-        ))}
-        <button onClick={handleAddIngredient}>Add ingredient</button>
-      </div>
-      <input
-        type="submit"
-        value={recipeToUpdate ? 'Update recipe' : 'Add recipe'}
-      />
-    </form>
+    <>
+      <h2>Create new smoothie recipe</h2>
+      <form onSubmit={handleSubmit(submitRecipe)}>
+        <div>
+          <label htmlFor="name">Name:</label>
+          <input
+            id="name"
+            {...register('name', { required: 'Name is required' })}
+          />
+          {errors.name && <span className="error">{errors.name.message}</span>}
+        </div>
+        <div>
+          {ingredients.map((i) => (
+            <div key={i}>
+              <label htmlFor={`ingredients.${i}`}>Ingredient:</label>
+              <input
+                id={`ingredients.${i}`}
+                {...register(`ingredients.${i}` as `ingredients.${number}`, {
+                  required: true,
+                })}
+              />
+              <label htmlFor={`amountValues.${i}`}>Amount:</label>
+              <input
+                id={`amountValues.${i}`}
+                {...register(`amountValues.${i}` as `amountValues.${number}`, {
+                  required: true,
+                  valueAsNumber: true,
+                  validate: { positive: (val) => Number(val) > 0 },
+                })}
+                type="number"
+                min="0"
+              />
+              <label htmlFor={`amountUnits.${i}`}>Unit:</label>
+              <select
+                id={`amountUnits.${i}`}
+                {...register(`amountUnits.${i}` as `amountUnits.${number}`, {
+                  required: true,
+                })}
+              >
+                <option value="">Select...</option>
+                {options.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+              {i > 0 && (
+                <button onClick={() => handleRemoveIngredient(i)}>
+                  Remove
+                </button>
+              )}
+            </div>
+          ))}
+          {(!!errors.ingredients || !!errors.amountUnits) && (
+            <p className="error">Ingredient info is required</p>
+          )}
+          <button onClick={handleAddIngredient}>Add ingredient</button>
+        </div>
+        <input
+          type="submit"
+          value={recipeToUpdate ? 'Update recipe' : 'Add recipe'}
+        />
+      </form>
+    </>
   );
 }
