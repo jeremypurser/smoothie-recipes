@@ -48,6 +48,7 @@ export function SmoothieForm() {
     register,
     unregister,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<CreateSmoothie>({
     defaultValues: getDefaultValues(),
@@ -69,8 +70,16 @@ export function SmoothieForm() {
   };
 
   const submitRecipe = (data: CreateSmoothie) => {
-    console.log(errors);
     const recipe = transformRecipeData({ recipe: data, id });
+
+    if (
+      Object.values(recipes.byId).find((r) => r.name === recipe.name) !==
+      undefined
+    ) {
+      setError('name', { message: 'Name already exists' });
+      return;
+    }
+
     dispatch(recipeToUpdate ? updateRecipe(recipe) : addRecipe(recipe));
     history.push('/recipes');
   };
