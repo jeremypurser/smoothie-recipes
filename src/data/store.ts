@@ -1,11 +1,9 @@
 import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit';
 import { loadState, saveState } from '../app/localStorage';
-import counterReducer from '../features/counter/counterSlice';
 import { recipesReducer } from './recipesSlice';
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
     recipes: recipesReducer,
   },
   preloadedState: loadState(),
